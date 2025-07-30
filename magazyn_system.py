@@ -1,3 +1,18 @@
+import os
+import json
+
+DANE_FILE = "dane.txt"
+HISTORIA_FILE = "historia.txt"
+
+if os.path.exists(DANE_FILE):
+    with open(DANE_FILE, "r") as f:
+        dane = json.load(f)
+        saldo = dane.get("saldo", 0)
+        magazyn = dane.get("magazyn", {})
+
+if os.path.exists(HISTORIA_FILE):
+    with open(HISTORIA_FILE, "r") as f:
+        historia = [linia.strip() for linia in f.readlines()]
 
 saldo = 0
 magazyn = {}
@@ -22,6 +37,22 @@ while True:
             for i, operacja in enumerate(historia):
                 plik.write(f"{i}. {operacja}\n")
         print("Historia operacji została zapisana do pliku 'historia.txt'")
+        break
+
+        with open("historia.txt", "a") as plik:
+            for operacja in historia:
+                plik.write(f"{operacja}\n")
+        print("Historia operacji została dopisana do pliku 'historia.txt'.")
+
+        with open("dane.txt", "w") as f:
+            import json
+            json.dump({
+                "saldo": saldo,
+                "magazyn": magazyn
+
+            }, f)
+        print("Stan salda i magazynu został zapisany do pliku 'dane.txt'.")
+
         break
 
     elif komenda not in komendy:
@@ -122,3 +153,4 @@ while True:
 
         except ValueError:
             print("Błąd: Podane wartości muszą byc liczbami lub puste.")
+
